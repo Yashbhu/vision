@@ -10,6 +10,7 @@ import { ArrowLeft, Upload, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import api from "../api";
 
 interface DetectedObject {
   label: string;
@@ -51,14 +52,15 @@ const Analyze = () => {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-      const apiResponse = await fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        body: formData,
-      });
+     const apiResponse = await api.post("/predict", formData, {
+  responseType: "blob", // to handle annotated image blob
+});
+
 
       if (!apiResponse.ok) throw new Error("Analysis failed on the server.");
+      const jsonData = apiResponse.headers["x-json-data"];
 
-      const jsonData = apiResponse.headers.get("X-Json-Data");
+      
       if (jsonData) {
         const parsedData = JSON.parse(jsonData);
         setDetectedObjects(parsedData.detections || []);
@@ -105,10 +107,7 @@ const Analyze = () => {
         formData.append(key, feedbackData[key]);
       }
 
-      const apiResponse = await fetch("http://127.0.0.1:5000/feedback", {
-        method: "POST",
-        body: formData,
-      });
+      const apiResponse = await api.post("/feedback", formData);
 
       if (!apiResponse.ok) throw new Error("Server failed to process feedback.");
 
