@@ -5,12 +5,12 @@ import { Card } from "@/components/ui/card";
 import { CameraCapture } from "@/components/ui/camera-capture";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { ImagePreview } from "@/components/ui/image-preview";
+import { FeedbackForm } from '@/components/ui/feedback-form';
 import { ArrowLeft, Upload, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-// This interface defines the structure for a detected object
 interface DetectedObject {
   label: string;
   confidence: number;
@@ -19,31 +19,26 @@ interface DetectedObject {
 const Analyze = () => {
   const navigate = useNavigate();
 
+  // --- State Declarations ---
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
   const [annotatedImageUrl, setAnnotatedImageUrl] = useState<string | null>(null);
-  
-  // NEW: State to hold the text labels
   const [detectedObjects, setDetectedObjects] = useState<DetectedObject[]>([]);
 
-  const handleImageCapture = (imageDataUrl: string) => {
-    setSelectedImage(imageDataUrl);
-    setAnnotatedImageUrl(null);
-    setDetectedObjects([]);
-    toast.success("Image captured successfully!");
-  };
+  // FIX: Removed the duplicate state declaration. Each modal now has its own unique state.
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [feedbackTargetLabel, setFeedbackTargetLabel] = useState("");
 
-  const handleImageUpload = (imageDataUrl: string) => {
+  // --- Handlers ---
+  const handleImageAction = (imageDataUrl: string) => {
     setSelectedImage(imageDataUrl);
     setAnnotatedImageUrl(null);
     setDetectedObjects([]);
-    toast.success("Image uploaded successfully!");
   };
 
   const handleAnalyze = async () => {
     if (!selectedImage) return;
-
     setIsAnalyzing(true);
     setDetectedObjects([]);
     toast.info("Analyzing image...");
@@ -61,28 +56,21 @@ const Analyze = () => {
         body: formData,
       });
 
-      if (!apiResponse.ok) {
-        throw new Error("Analysis failed on the server.");
-      }
+      if (!apiResponse.ok) throw new Error("Analysis failed on the server.");
 
-      // --- CORRECTED LOGIC ---
-      // 1. Get the JSON data from the custom header
       const jsonData = apiResponse.headers.get("X-Json-Data");
       if (jsonData) {
         const parsedData = JSON.parse(jsonData);
         setDetectedObjects(parsedData.detections || []);
       }
 
-      // 2. Get the annotated image from the response body
       const imageBlob = await apiResponse.blob();
-      if (annotatedImageUrl) {
-        URL.revokeObjectURL(annotatedImageUrl);
-      }
+      if (annotatedImageUrl) URL.revokeObjectURL(annotatedImageUrl);
+      
       const annotatedUrl = URL.createObjectURL(imageBlob);
       setAnnotatedImageUrl(annotatedUrl);
       
       toast.success("Analysis completed!");
-
     } catch (error) {
       console.error("Analysis error:", error);
       toast.error("Analysis failed. Please try again.");
@@ -92,13 +80,44 @@ const Analyze = () => {
   };
 
   const handleClearImage = () => {
-    if (annotatedImageUrl) {
-      URL.revokeObjectURL(annotatedImageUrl);
-    }
+    if (annotatedImageUrl) URL.revokeObjectURL(annotatedImageUrl);
     setSelectedImage(null);
     setAnnotatedImageUrl(null);
     setDetectedObjects([]);
-    toast.success("Image cleared");
+  };
+
+  const handleOpenFeedbackModal = (incorrectLabel: string) => {
+    setFeedbackTargetLabel(incorrectLabel);
+    setIsFeedbackModalOpen(true);
+  };
+
+  const handleFeedbackSubmit = async (feedbackData: Record<string, string>) => {
+    if (!selectedImage) return;
+    toast.info("Submitting feedback...");
+    try {
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+      const imageFile = new File([blob], "feedback.jpg", { type: "image/jpeg" });
+
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      for (const key in feedbackData) {
+        formData.append(key, feedbackData[key]);
+      }
+
+      const apiResponse = await fetch("http://127.0.0.1:5000/feedback", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!apiResponse.ok) throw new Error("Server failed to process feedback.");
+
+      toast.success("Thank you! Your feedback will help us improve.");
+      setIsFeedbackModalOpen(false);
+    } catch (error) {
+      toast.error("Could not submit feedback.");
+      console.error("Feedback error:", error);
+    }
   };
 
   return (
@@ -129,31 +148,28 @@ const Analyze = () => {
       <CameraCapture
         isOpen={isCameraModalOpen}
         onClose={() => setIsCameraModalOpen(false)}
-        onCapture={handleImageCapture}
+        onCapture={handleImageAction}
+      />
+
+      <FeedbackForm
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+        onSubmit={handleFeedbackSubmit}
+        incorrectLabel={feedbackTargetLabel}
       />
 
       <div className="container mx-auto px-4 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="max-w-6xl mx-auto"
-        >
+        <motion.div className="max-w-6xl mx-auto">
           {selectedImage ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-            >
-              <ImagePreview
-                imageUrl={selectedImage}
-                isAnalyzing={isAnalyzing}
-                onAnalyze={handleAnalyze}
-                onClear={handleClearImage}
-                annotatedImageUrl={annotatedImageUrl}
-                detectedObjects={detectedObjects}
-              />
-            </motion.div>
+            <ImagePreview
+              imageUrl={selectedImage}
+              isAnalyzing={isAnalyzing}
+              onAnalyze={handleAnalyze}
+              onClear={handleClearImage}
+              annotatedImageUrl={annotatedImageUrl}
+              detectedObjects={detectedObjects}
+              onOpenFeedback={handleOpenFeedbackModal}
+            />
           ) : (
             <div className="space-y-8">
               <div className="text-center">
@@ -182,7 +198,7 @@ const Analyze = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 }}
                     >
-                      <ImageUpload onUpload={handleImageUpload} />
+                      <ImageUpload onUpload={handleImageAction} />
                     </motion.div>
                   </TabsContent>
                   <TabsContent value="camera">

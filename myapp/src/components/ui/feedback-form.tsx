@@ -18,7 +18,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({ isOpen, onClose, onS
   const [correctLabel, setCorrectLabel] = useState('');
   const [comments, setComments] = useState('');
 
-  // Reset form when the incorrectLabel prop changes (when a new feedback is initiated)
+  // Reset the form fields whenever a new feedback process begins
   useEffect(() => {
     if (isOpen) {
       setCorrectLabel('');
@@ -54,7 +54,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({ isOpen, onClose, onS
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.9, y: 20 }}
             className="w-full max-w-md"
-            onClick={e => e.stopPropagation()}
+            onClick={e => e.stopPropagation()} // Prevents modal from closing when clicking inside it
           >
             <Card>
               <CardHeader>

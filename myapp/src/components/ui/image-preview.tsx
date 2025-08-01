@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Trash2, Eye } from "lucide-react";
+import { Sparkles, Trash2, Eye, MessageSquareWarning } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface DetectedObject {
@@ -17,6 +17,7 @@ interface ImagePreviewProps {
   onClear: () => void;
   annotatedImageUrl: string | null;
   detectedObjects: DetectedObject[];
+  onOpenFeedback: (incorrectLabel: string) => void;
 }
 
 export const ImagePreview: React.FC<ImagePreviewProps> = ({
@@ -26,6 +27,7 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
   onClear,
   annotatedImageUrl,
   detectedObjects = [],
+  onOpenFeedback,
 }) => {
   return (
     <Card className="p-6 bg-gradient-card border-border/50">
@@ -83,7 +85,6 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
           </Button>
         </div>
         
-        {/* FIX: This section now correctly checks if there are detected objects */}
         {detectedObjects.length > 0 && (
            <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -95,24 +96,47 @@ export const ImagePreview: React.FC<ImagePreviewProps> = ({
               What the AI Found
             </h4>
             
-            <div className="flex flex-wrap gap-2">
+            <div className="space-y-2">
               {detectedObjects.map((obj, index) => (
-                <Badge
-                  key={index}
-                  variant="secondary"
-                  className="bg-primary/10 text-primary hover:bg-primary/20 text-base"
-                >
-                  {obj.label} ({(obj.confidence * 100).toFixed(0)}%)
-                </Badge>
+                <div key={index} className="flex items-center justify-between p-2 rounded-md bg-muted/50">
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/10 text-primary hover:bg-primary/20 text-base"
+                    >
+                      {obj.label} ({(obj.confidence * 100).toFixed(0)}%)
+                    </Badge>
+                </div>
               ))}
+            </div>
+
+            <div className="text-center pt-4">
+                <Button
+                    variant="secondary"
+                    size="lg"
+                    className="h-11 px-6 text-base hover:bg-blue-600 hover:text-white"
+                    onClick={() => onOpenFeedback(
+                        detectedObjects.map(obj => obj.label).join(', ')
+                    )}
+                >
+                    <MessageSquareWarning className="w-5 h-5 mr-2" />
+                    Report Incorrect Detection
+                </Button>
             </div>
           </motion.div>
         )}
 
-        {/* This message shows only if analysis ran but found nothing */}
         {annotatedImageUrl && detectedObjects.length === 0 && (
-          <div className="pt-4 border-t border-border/50 text-center">
+          <div className="pt-4 border-t border-border/50 text-center space-y-4">
             <p className="text-sm text-muted-foreground">No specific objects were detected.</p>
+            <Button
+                variant="secondary"
+                size="lg"
+                className="h-11 px-6 text-base hover:bg-blue-600 hover:text-white"
+                onClick={() => onOpenFeedback("No objects detected")}
+            >
+                <MessageSquareWarning className="w-5 h-5 mr-2" />
+                This is Incorrect
+            </Button>
           </div>
         )}
       </div>
