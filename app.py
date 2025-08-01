@@ -17,6 +17,9 @@ app = Flask(__name__)
 CORS(app, expose_headers=["Content-Type", "X-Json-Data"])  
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+@app.route('/')
+def home():
+    return 'Vision API is running'
 
 # --- Model & Device Configuration ---
 device = 'cuda' if torch.cuda.is_available() else 'cpu'

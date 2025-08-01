@@ -1,0 +1,28 @@
+# Python / Backend
+# ----------------
+# Ignore the virtual environment folder
+/venv
+/env
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore the large model file
+model/best.pt
+
+
+# Frontend / Node.js (inside myapp)
+# ---------------------------------
+# Ignore frontend dependencies
+myapp/node_modules
+
+# Ignore frontend build output
+myapp/dist
+myapp/build
+
+# Ignore local environment variables for the frontend
+myapp/.env.local
+myapp/.env.*.local
+
+.env
