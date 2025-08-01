@@ -27,8 +27,6 @@ const Analyze = () => {
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
   const [annotatedImageUrl, setAnnotatedImageUrl] = useState<string | null>(null);
   const [detectedObjects, setDetectedObjects] = useState<DetectedObject[]>([]);
-
-  // FIX: Removed the duplicate state declaration. Each modal now has its own unique state.
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [feedbackTargetLabel, setFeedbackTargetLabel] = useState("");
 
@@ -53,22 +51,27 @@ const Analyze = () => {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-     const apiResponse = await api.post("/predict", formData, {
-  responseType: "blob", // to handle annotated image blob
-});
+      // FIX: Correctly handle the Axios response object
+      const apiResponse = await api.post("/predict", formData, {
+        responseType: "blob", // Important for receiving an image blob
+      });
 
-
-      if (!apiResponse.ok) throw new Error("Analysis failed on the server.");
+      // Axios puts custom headers in the 'headers' object
       const jsonData = apiResponse.headers["x-json-data"];
-
       
       if (jsonData) {
-        const parsedData = JSON.parse(jsonData);
+        // The header value will be a string, so it needs to be parsed
+        const parsedData = JSON.parse(jsonData as string);
         setDetectedObjects(parsedData.detections || []);
       }
 
-      const imageBlob = await apiResponse.blob();
-      if (annotatedImageUrl) URL.revokeObjectURL(annotatedImageUrl);
+      // For Axios with responseType: 'blob', the blob data is in `apiResponse.data`
+      const imageBlob = apiResponse.data;
+      
+      // Clean up the old URL before creating a new one
+      if (annotatedImageUrl) {
+        URL.revokeObjectURL(annotatedImageUrl);
+      }
       
       const annotatedUrl = URL.createObjectURL(imageBlob);
       setAnnotatedImageUrl(annotatedUrl);
@@ -108,9 +111,9 @@ const Analyze = () => {
         formData.append(key, feedbackData[key]);
       }
 
-      const apiResponse = await api.post("/feedback", formData);
-
-      if (!apiResponse.ok) throw new Error("Server failed to process feedback.");
+      // FIX: Axios will automatically throw an error on a non-2xx response,
+      // so the !response.ok check is not needed and the catch block will handle failure.
+      await api.post("/feedback", formData);
 
       toast.success("Thank you! Your feedback will help us improve.");
       setIsFeedbackModalOpen(false);
@@ -120,6 +123,7 @@ const Analyze = () => {
     }
   };
 
+  // --- JSX remains unchanged ---
   return (
     <div className="min-h-screen bg-background">
       <motion.header
