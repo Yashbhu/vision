@@ -1,3 +1,4 @@
+import api from "../api";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,7 +11,7 @@ import { ArrowLeft, Upload, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import api from "../api";
+
 
 interface DetectedObject {
   label: string;
