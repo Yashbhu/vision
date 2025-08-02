@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const instance = axios.create({
    import.meta.env.VITE_APP_API_URL,
-  timeout: 30000, // Increased timeout for potentially slow model inference
+  timeout: 30000
 });
 
 export default instance;
