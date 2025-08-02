@@ -58,7 +58,7 @@ App has:
 - Display prediction + confidence
 - [ ] Optional: feedback button → `/feedback`
 
-🔙 Backend (Flask or FastAPI):
+🔙 Backend (Flask):
 - `/predict`: YOLOv8 inference
 - `/feedback`: stores incorrect/unknown predictions
 - `/review`: Falcon logs confusion, suggests label, queues data
