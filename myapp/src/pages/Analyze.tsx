@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-
 interface DetectedObject {
   label: string;
   confidence: number;
@@ -20,8 +19,6 @@ interface DetectedObject {
 
 const Analyze = () => {
   const navigate = useNavigate();
-
-  // --- State Declarations ---
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
@@ -30,7 +27,6 @@ const Analyze = () => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const [feedbackTargetLabel, setFeedbackTargetLabel] = useState("");
 
-  // --- Handlers ---
   const handleImageAction = (imageDataUrl: string) => {
     setSelectedImage(imageDataUrl);
     setAnnotatedImageUrl(null);
@@ -51,24 +47,19 @@ const Analyze = () => {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-      // FIX: Correctly handle the Axios response object
       const apiResponse = await api.post("/predict", formData, {
-        responseType: "blob", // Important for receiving an image blob
+        responseType: "blob",
       });
 
-      // Axios puts custom headers in the 'headers' object
       const jsonData = apiResponse.headers["x-json-data"];
       
       if (jsonData) {
-        // The header value will be a string, so it needs to be parsed
         const parsedData = JSON.parse(jsonData as string);
         setDetectedObjects(parsedData.detections || []);
       }
 
-      // For Axios with responseType: 'blob', the blob data is in `apiResponse.data`
       const imageBlob = apiResponse.data;
       
-      // Clean up the old URL before creating a new one
       if (annotatedImageUrl) {
         URL.revokeObjectURL(annotatedImageUrl);
       }
@@ -111,10 +102,7 @@ const Analyze = () => {
         formData.append(key, feedbackData[key]);
       }
 
-      // FIX: Axios will automatically throw an error on a non-2xx response,
-      // so the !response.ok check is not needed and the catch block will handle failure.
       await api.post("/feedback", formData);
-
       toast.success("Thank you! Your feedback will help us improve.");
       setIsFeedbackModalOpen(false);
     } catch (error) {
@@ -123,7 +111,6 @@ const Analyze = () => {
     }
   };
 
-  // --- JSX remains unchanged ---
   return (
     <div className="min-h-screen bg-background">
       <motion.header
