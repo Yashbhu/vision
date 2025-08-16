@@ -1,93 +1,106 @@
 # 🧠 Falcon-Powered Continuous Object Detection System
 
+[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)  
+[![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://reactjs.org/)  
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-ObjectDetection-orange)](https://ultralytics.com/)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
+
 Real-time object detection powered by **YOLOv8** and **Falcon LLM** with **self-adaptive retraining**, **user feedback**, and **auto version control**.
 
 ---
 
-## Screenshots
+## 📸 Screenshots
 
-![Landing Page](https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/landing.jpeg?raw=true)  
-![Main Image](https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/image.jpeg?raw=true)  
-![Camera Capture](https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/camera.jpeg?raw=true)  
-![User Feedback](https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/feedback.jpeg?raw=true)  
+All images are displayed at equal width for consistency:
 
----
-
-## ✅ Falcon-Integrated Continuous Learning
-
-### 🔍 Problem
-In dynamic environments, static models degrade over time.
-
-### ⚡ Solution
-Falcon LLM monitors model outputs, identifies confusion, and initiates retraining—**without manual dev intervention**.
+<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/landing.jpeg?raw=true" alt="Landing Page" width="400"/>  
+<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/image.jpeg?raw=true" alt="Main Image" width="400"/>  
+<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/camera.jpeg?raw=true" alt="Camera Capture" width="400"/>  
+<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/feedback.jpeg?raw=true" alt="User Feedback" width="400"/>  
 
 ---
 
-## 🧠 Falcon's Role in Learning Loop
+## ✅ Features
 
-Falcon operates in the backend as an **intelligent observer + retraining trigger**.
+- **Falcon-Integrated Continuous Learning**  
+- Real-time YOLOv8 object detection  
+- Self-adaptive retraining triggered by model confidence & user feedback  
+- Human-in-the-loop feedback for label corrections  
+- Automated model versioning & deployment  
+- Offline feedback syncing for intermittent internet connections  
 
-**Triggers Falcon When:**
-- 🔻 Low model confidence  
-- ❌ Misclassification detected  
-- 🆕 New or unseen object appears  
+---
 
-**Falcon Does:**
-- Logs edge cases and mispredictions  
-- Generates a natural language description of what went wrong  
-- Suggests label correction or flags it as `to-review`  
+## 🔍 Problem
+
+Static object detection models degrade in **dynamic environments**, causing misclassifications and low-confidence predictions.
+
+---
+
+## ⚡ Solution
+
+Falcon LLM acts as an **intelligent observer and retraining trigger**, identifying misclassifications and initiating retraining automatically—**no manual intervention required**.
+
+---
+
+## 🧠 Falcon's Role in the Learning Loop
+
+**Triggers Falcon when:**
+- Low model confidence  
+- Misclassification detected  
+- New or unseen objects appear  
+
+**Falcon performs:**
+- Logs edge cases & mispredictions  
+- Generates natural language description of the issue  
+- Suggests label correction or flags as `to-review`  
 
 ---
 
 ## 🔁 Automated Retraining Loop
 
-Once N confusing or misclassified samples collected:
+Once enough confusing/misclassified samples are collected:
 
-1. Falcon **kicks off fine-tuning**  
-2. Adds semantic tags like:  
-   > “Object resembles Class A but has a texture similar to Class B”  
+1. Falcon initiates **fine-tuning**  
+2. Adds semantic tags describing the sample  
 3. Retraining pipeline:  
    - Re-train YOLOv8  
-   - Save model as `model_v2.pt`, `model_v3.pt`, etc.  
-   - Serve new weights  
+   - Save models as `model_v2.pt`, `model_v3.pt`, etc.  
+   - Deploy new weights  
 
-> 🔄 Can be triggered via CRON job or on-demand API  
+> Retraining can be triggered via **CRON job** or an **on-demand API**.
 
 ---
 
-## 🧠 Human-in-the-Loop Feedback (Optional)
+## 🧠 Human-in-the-Loop Feedback
 
-- Falcon asks: _“Do you want to label this as [Class]?”_  
-- User confirms/corrects  
-- Sample pushed to retraining queue  
-
-App has:
-- 🔘 "Not accurate?" feedback button  
-- Sends image + correction to Falcon backend  
+- Users confirm/correct labels via a feedback button  
+- Samples are automatically pushed to retraining queue  
+- Offline buffer syncs feedback when internet is restored  
 
 ---
 
 ## 🏗️ System Architecture
 
-**🖥️ Frontend (React Native / Web):**  
-- Upload / capture image  
+**Frontend (React / React Native):**
+- Upload / capture images  
 - `POST /predict` → backend  
 - Display prediction + confidence  
-- [ ] Optional: feedback button → `/feedback`  
+- Optional feedback button → `/feedback`
 
-**🔙 Backend (Flask):**  
+**Backend (Flask / Python):**
 - `/predict`: YOLOv8 inference  
 - `/feedback`: stores incorrect/unknown predictions  
 - `/review`: Falcon logs confusion, suggests label, queues data  
 
 ---
 
-## 🎯 Real-World Scenario for Judges
+## 🎯 Real-World Scenario
 
-> 🔥 Trained model detects red fire extinguishers. A new **white** extinguisher appears.  
-> Model misclassifies it as a **plastic bottle**.  
-> Falcon detects repeated low confidence scores, generates meta-descriptions, flags it for retraining.  
-> Within 24 hours — model learns it. No dev intervention. 💥  
+> 🔥 The model detects red fire extinguishers. A new **white extinguisher** appears.  
+> Misclassified as a **plastic bottle**.  
+> Falcon detects repeated low-confidence predictions, generates meta-tags, flags it for retraining.  
+> Within 24 hours — model adapts **without developer intervention**. 💥  
 
 ---
 
@@ -96,7 +109,28 @@ App has:
 | Feature                        | Description                                                |
 |--------------------------------|------------------------------------------------------------|
 | 🧬 Model Versioning            | Track `model_v1.pt`, `model_v2.pt`, etc.                  |
-| 📊 Accuracy Graph              | Chart performance over time                                |
+| 📊 Accuracy Graph              | Charts model performance over time                        |
 | 🔁 On-device Model Swap        | Pulls new weights on app restart                           |
 | 📡 Offline Feedback Sync       | Buffers user corrections, syncs on internet reconnect     |
-| 🧠 Explainability via Falcon   | Shows _why_ a prediction was made                          |
+| 🧠 Explainability via Falcon   | Provides insights into why predictions were made          |
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, React Native  
+- **Backend:** Flask, Python  
+- **Object Detection:** YOLOv8  
+- **Continuous Learning:** Falcon LLM  
+- **Database / Storage:** PostgreSQL / File system  
+- **Real-time Communication:** WebRTC (optional for live feedback)  
+- **Caching:** Redis  
+
+---
+
+## ⚡ Getting Started
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Yashbhu/vision.git
+cd vision
