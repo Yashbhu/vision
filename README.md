@@ -14,9 +14,9 @@ Real-time object detection powered by **YOLOv8** and **Falcon LLM** with **self-
 All images are displayed at equal width for consistency:
 
 <img src="https://raw.githubusercontent.com/Yashbhu/vision/main/hero.jpeg" alt="Landing Page" width="400"/>  
-<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/image.jpeg?raw=true" alt="Main Image" width="400"/>  
-<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/camera.jpeg?raw=true" alt="Camera Capture" width="400"/>  
-<img src="https://github.com/Yashbhu/vision/blob/b8135bf53e15d3b15a28c9658e6354e50fc49d2c/feedback.jpeg?raw=true" alt="User Feedback" width="400"/>  
+<img src="https://raw.githubusercontent.com/Yashbhu/vision/main/image.jpeg" alt="Main Image" width="400"/>  
+<img src="https://raw.githubusercontent.com/Yashbhu/vision/main/amera.jpeg" alt="Camera Capture" width="400"/>  
+<img src="https://raw.githubusercontent.com/Yashbhu/vision/main/feedback.jpeg" alt="User Feedback" width="400"/>  
 
 ---
 
