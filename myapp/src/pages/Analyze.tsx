@@ -129,7 +129,7 @@ const Analyze = () => {
               Back to Home
             </Button>
             <h1 className="text-xl font-semibold text-foreground">
-              AI Object Detection
+              Vision AI
             </h1>
             <div className="w-24" />
           </div>

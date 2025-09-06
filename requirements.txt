@@ -4,3 +4,4 @@ ultralytics
 torch
 Pillow
 gunicorn
+puccinialin

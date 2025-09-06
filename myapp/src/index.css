@@ -8,41 +8,53 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 225 25% 7%;
+    --foreground: 150 100% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 225 25% 9%;
+    --card-foreground: 150 100% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 225 25% 9%;
+    --popover-foreground: 150 100% 98%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --primary-glow: 224 76% 73%;
+    --primary: 135 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 135 100% 65%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 195 100% 50%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 225 25% 12%;
+    --muted-foreground: 150 20% 70%;
 
-    --accent: 262 83% 58%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 285 100% 50%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 0%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
+    --border: 225 25% 15%;
+    --input: 225 25% 15%;
+    --ring: 135 100% 50%;
 
     --radius: 0.75rem;
     
-    /* AI Theme Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--primary-glow)) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)) 0%, hsl(var(--muted)) 100%);
+    /* Cyberpunk Theme Gradients */
+    --gradient-primary: linear-gradient(90deg, 
+      hsl(var(--primary)) 0%,
+      hsl(var(--secondary)) 100%
+    );
+    --gradient-hero: linear-gradient(170deg, 
+      transparent 0%,
+      hsl(var(--background)) 30%,
+      hsl(var(--primary) / 0.1) 50%,
+      hsl(var(--background)) 70%,
+      transparent 100%
+    );
+    --gradient-card: linear-gradient(135deg, 
+      hsl(var(--card)) 0%,
+      hsl(var(--muted)) 100%
+    );
     
     /* Glassmorphism */
     --glass-bg: hsla(0, 0%, 100%, 0.1);
@@ -70,34 +82,34 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 225 25% 5%;
+    --foreground: 150 100% 98%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 225 25% 7%;
+    --card-foreground: 150 100% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 225 25% 7%;
+    --popover-foreground: 150 100% 98%;
 
-    --primary: 224 76% 73%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --primary-glow: 262 83% 78%;
+    --primary: 135 100% 60%;
+    --primary-foreground: 0 0% 0%;
+    --primary-glow: 135 100% 75%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 195 100% 60%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 225 25% 10%;
+    --muted-foreground: 150 20% 75%;
 
-    --accent: 262 83% 68%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 285 100% 60%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 100% 60%;
+    --destructive-foreground: 0 0% 0%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224 76% 73%;
+    --border: 225 25% 12%;
+    --input: 225 25% 12%;
+    --ring: 135 100% 60%;
     
     /* Dark mode gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
