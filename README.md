@@ -9,7 +9,7 @@ Real-time object detection powered by **YOLOv8** and **Falcon LLM** with **self-
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshot
 
 All images are displayed at equal width for consistency:
 
